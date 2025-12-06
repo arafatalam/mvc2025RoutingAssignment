@@ -18,5 +18,8 @@ namespace mvc2025RoutingAssignment.Models
         [StringLength(40, MinimumLength = 2,ErrorMessage = "Author Name must be between 2 and 40 characters.")]
         [Display(Name = "Author's Name")]
         public string? AuthorName { get; set; }
+
+
+        public virtual ICollection<Post>? Posts { get; set; }
     }
 }

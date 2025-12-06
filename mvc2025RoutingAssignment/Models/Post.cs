@@ -18,5 +18,10 @@ namespace mvc2025RoutingAssignment.Models
         [Required]
         [Display(Name = "Date Posted")]
         public DateTime DatePosted { get; set; }
+
+
+        [Required]
+        public int BlogID { get; set; }
+        public virtual Blog? Blog { get; set; }
     }
 }
