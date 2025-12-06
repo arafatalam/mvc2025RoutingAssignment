@@ -20,9 +20,38 @@ namespace mvc2025RoutingAssignment.Controllers
         }
 
         // GET: Posts
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? searchDate)
         {
-            var posts = await _context.Posts
+
+
+            ViewData["CurrentSearchDate"] = searchDate;
+
+            var query = _context.Posts
+                .Include(p => p.Blog)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchDate))
+            {
+                
+                try
+                {
+                    DateTime date = DateTime.Parse(searchDate);
+                    DateTime dayOnly = new DateTime(date.Year, date.Month, date.Day);
+
+                    query = query.Where(p => p.DatePosted.Year == dayOnly.Year
+                                          && p.DatePosted.Month == dayOnly.Month
+                                          && p.DatePosted.Day == dayOnly.Day);
+                }
+                catch
+                {
+                    //Do Nothing
+                }
+            }
+
+
+
+
+            var posts = await query
                 .Include(p => p.Blog)
                 .OrderByDescending(p => p.DatePosted)
                 .ToListAsync();

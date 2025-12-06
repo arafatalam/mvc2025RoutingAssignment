@@ -9,6 +9,18 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+<form asp-action="Index" method="get">
+    <p>
+        Find by Date:
+        <input type="date"
+               name="searchDate"
+               value="@(ViewData["CurrentSearchDate"] ?? "")"
+               placeholder="yyyy-mm-dd" />
+        <input type="submit" value="Search Date" class="btn btn-primary" />
+    </p>
+</form>
+
 <table class="table">
     <thead>
         <tr>
