@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace mvc2025RoutingAssignment.Models
@@ -18,6 +19,10 @@ namespace mvc2025RoutingAssignment.Models
         [Required]
         [Display(Name = "Date Posted")]
         public DateTime DatePosted { get; set; }
+
+
+        [DisplayName("Tags")]
+        public string? Tags { get; set; }
 
 
         [Required]
