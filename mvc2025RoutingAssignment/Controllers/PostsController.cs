@@ -70,6 +70,7 @@ namespace mvc2025RoutingAssignment.Controllers
                         .Split(',', StringSplitOptions.RemoveEmptyEntries)
                         .Count(tag => !string.IsNullOrWhiteSpace(tag.Trim()))
             })
+            .OrderBy(m => m.BlogName)
             .ToList();
 
             return View(data);
@@ -100,7 +101,7 @@ namespace mvc2025RoutingAssignment.Controllers
         // GET: Posts/Create
         public IActionResult Create()
         {
-            ViewData["BlogID"] = new SelectList(_context.Blogs, "BlogID", "AuthorName");
+            ViewData["BlogID"] = new SelectList(_context.Blogs, "BlogID", "BlogName");
             return View();
         }
 

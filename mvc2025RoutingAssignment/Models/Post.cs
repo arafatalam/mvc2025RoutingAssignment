@@ -26,6 +26,7 @@ namespace mvc2025RoutingAssignment.Models
 
 
         [Required]
+        [DisplayName("BlogName")]
         public int BlogID { get; set; }
         public virtual Blog? Blog { get; set; }
 
