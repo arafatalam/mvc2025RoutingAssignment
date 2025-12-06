@@ -163,6 +163,53 @@ namespace mvc2025RoutingAssignment.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Search(string? nameOfTag)
+        {
+            
+            if (string.IsNullOrWhiteSpace(nameOfTag))
+            {
+                return RedirectToAction("Index");
+            }
+
+            
+            var tag = await _context.Tags
+                .Include(t => t.PostTags)
+                    .ThenInclude(pt => pt.Post)
+                .FirstOrDefaultAsync(t =>
+                    t.TagName != null &&
+                    t.TagName.ToLower() == nameOfTag.ToLower());
+
+            
+            if (tag == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            
+            var model = new TagSearchViewModel
+            {
+                TagID = tag.TagID,
+                TagName = tag.TagName
+            };
+
+            model.Posts = tag.PostTags
+                .Where(pt => pt.Post != null)
+                .Select(pt => new TagSearchPostItem
+                {
+                    PostID = pt.Post!.PostID,
+                    Title = pt.Post.Title ?? "",
+                    DatePosted = pt.Post.DatePosted
+                })
+                .OrderByDescending(p => p.DatePosted)
+                .ToList();
+
+            // Return Search view
+            return View("TagSearch", model);
+        }
+
+
+        
         private bool TagExists(int id)
         {
             return _context.Tags.Any(e => e.TagID == id);

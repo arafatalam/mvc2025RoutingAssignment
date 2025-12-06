@@ -1,0 +1,44 @@
+﻿@model mvc2025RoutingAssignment.Models.ViewModels.TagSearchViewModel
+
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Tag</h4>
+    <hr />
+    <dt>Tag Name</dt>
+    <p>@Model.TagName</p>
+
+    <dt>Associated Posts</dt>
+
+    @if (Model.Posts.Any())
+    {
+        <ul>
+            @foreach (var item in Model.Posts)
+            {
+                <li>
+                    
+                    <a asp-controller="Posts"
+                       asp-action="Details"
+                       asp-route-id="@item.PostID">
+                        @item.DatePosted.ToString("yyyy-MM-dd") - @item.Title
+                    </a>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No posts currently use this tag.</p>
+    }
+
+    
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.TagID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

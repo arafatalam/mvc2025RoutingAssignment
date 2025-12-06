@@ -34,6 +34,19 @@ namespace mvc2025RoutingAssignment
 
             app.UseAuthorization();
 
+
+
+            app.MapControllerRoute(
+                name: "tagSearch",
+                pattern: "Search/{nameOfTag?}",
+                defaults: new { controller = "Tags", action = "Search" });
+
+            app.MapControllerRoute(
+                name: "archiveSearch",
+                pattern: "Archive/{entryDate?}",
+                defaults: new { controller = "Archive", action = "Entry" });
+
+
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
