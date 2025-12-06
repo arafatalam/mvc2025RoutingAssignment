@@ -26,7 +26,7 @@ namespace mvc2025RoutingAssignment.Controllers
                 .Include(p => p.Blog)
                 .OrderByDescending(p => p.DatePosted)
                 .ToListAsync();
-            // Convert to ViewModel
+            
             var data = posts.Select(p => new PostsViewModel
             {
                 PostID = p.PostID,
@@ -82,12 +82,43 @@ namespace mvc2025RoutingAssignment.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PostID,Title,Body,DatePosted,Tags,BlogID")] Post post)
         {
+
+
             if (ModelState.IsValid)
             {
                 _context.Add(post);
+
+                var tagNames = (post.Tags ?? string.Empty)
+                        .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                        .Select(t => t.Trim())
+                        .Where(t => !string.IsNullOrWhiteSpace(t))
+                        .Distinct(StringComparer.OrdinalIgnoreCase)
+                        .ToList();
+                foreach (var tagName in tagNames)
+                {
+                    
+                    var tag = await _context.Tags
+                        .FirstOrDefaultAsync(t => t.TagName!.ToLower() == tagName.ToLower());
+
+                    
+                    if (tag == null)
+                    {
+                        tag = new Tag { TagName = tagName };
+                        _context.Tags.Add(tag);
+                    }
+
+                    
+                    _context.PostTags.Add(new PostTag
+                    {
+                        Post = post,
+                        Tag = tag
+                    });
+                }
+
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["BlogID"] = new SelectList(_context.Blogs, "BlogID", "AuthorName", post.BlogID);
             return View(post);
         }
@@ -125,8 +156,54 @@ namespace mvc2025RoutingAssignment.Controllers
             {
                 try
                 {
-                    _context.Update(post);
+
+                    var existingPost = await _context.Posts
+                        .Include(p => p.PostTags)
+                        .ThenInclude(pt => pt.Tag)
+                        .FirstOrDefaultAsync(p => p.PostID == id);
+                    if (existingPost == null)
+                        return NotFound();
+
+                    existingPost.Title = post.Title;
+                    existingPost.Body = post.Body;
+                    existingPost.DatePosted = post.DatePosted;
+                    existingPost.BlogID = post.BlogID;
+                    existingPost.Tags = post.Tags;
+
+                    _context.PostTags.RemoveRange(existingPost.PostTags);
+
+                    var tagNames = (post.Tags ?? string.Empty)
+                        .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                        .Select(t => t.Trim())
+                        .Where(t => !string.IsNullOrWhiteSpace(t))
+                        .Distinct(StringComparer.OrdinalIgnoreCase)
+                        .ToList();
+                    foreach (var tagName in tagNames)
+                    {
+                        
+                        var tag = await _context.Tags
+                            .FirstOrDefaultAsync(t => t.TagName!.ToLower() == tagName.ToLower());
+
+                        
+                        if (tag == null)
+                        {
+                            tag = new Tag { TagName = tagName };
+                            _context.Tags.Add(tag);
+                        }
+
+                        
+                        _context.PostTags.Add(new PostTag
+                        {
+                            Post = existingPost,
+                            Tag = tag
+                        });
+                    }
+
                     await _context.SaveChangesAsync();
+
+
+                    //_context.Update(post);
+                    //await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -141,7 +218,8 @@ namespace mvc2025RoutingAssignment.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BlogID"] = new SelectList(_context.Blogs, "BlogID", "AuthorName", post.BlogID);
+
+            ViewData["BlogID"] = new SelectList(_context.Blogs, "BlogID", "BlogName", post.BlogID);
             return View(post);
         }
 
@@ -183,5 +261,10 @@ namespace mvc2025RoutingAssignment.Controllers
         {
             return _context.Posts.Any(e => e.PostID == id);
         }
+
+
+        
+       
+
     }
 }
