@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using mvc2025RoutingAssignment.Models;
+using mvc2025RoutingAssignment.Models.ViewModels;
 
 namespace mvc2025RoutingAssignment.Controllers
 {
@@ -21,8 +22,31 @@ namespace mvc2025RoutingAssignment.Controllers
         // GET: Posts
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Posts.Include(p => p.Blog);
-            return View(await applicationDbContext.ToListAsync());
+            var posts = await _context.Posts
+                .Include(p => p.Blog)
+                .OrderByDescending(p => p.DatePosted)
+                .ToListAsync();
+            // Convert to ViewModel
+            var data = posts.Select(p => new PostsViewModel
+            {
+                PostID = p.PostID,
+                BlogName = p.Blog.BlogName,
+                Title = p.Title,
+                DatePosted = p.DatePosted,
+
+                // Count tags from comma-separated string
+                TagCount = string.IsNullOrWhiteSpace(p.Tags)
+                    ? 0
+                    : p.Tags
+                        .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                        .Count(tag => !string.IsNullOrWhiteSpace(tag.Trim()))
+            })
+            .ToList();
+
+            return View(data);
+
+            //var applicationDbContext = _context.Posts.Include(p => p.Blog);
+            //return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Posts/Details/5

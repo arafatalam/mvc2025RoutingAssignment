@@ -1,4 +1,4 @@
-﻿@model IEnumerable<mvc2025RoutingAssignment.Models.Post>
+﻿@model IEnumerable<mvc2025RoutingAssignment.Models.ViewModels.PostsViewModel>
 
 @{
     ViewData["Title"] = "Posts (Index)";
@@ -13,47 +13,43 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Title)
+                @Html.DisplayNameFor(model => model.First().BlogName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Body)
+                @Html.DisplayNameFor(model => model.First().Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DatePosted)
+                @Html.DisplayNameFor(model => model.First().DatePosted)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Tags)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Blog)
+                @Html.DisplayName("Tags")
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Body)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DatePosted)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tags)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Blog.AuthorName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.PostID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.PostID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.PostID">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BlogName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @item.DatePosted.ToString("g")
+                </td>
+                <td>
+                    @item.TagCount
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.PostID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.PostID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.PostID">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
