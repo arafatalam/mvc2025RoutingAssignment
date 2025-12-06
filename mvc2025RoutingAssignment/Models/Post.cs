@@ -1,6 +1,22 @@
-﻿namespace mvc2025RoutingAssignment.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace mvc2025RoutingAssignment.Models
 {
     public class Post
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int PostID { get; set; }   
+
+        [Required]
+        public string Title { get; set; } = string.Empty;
+
+        [Required]
+        public string Body { get; set; } = string.Empty;
+
+        [Required]
+        [Display(Name = "Date Posted")]
+        public DateTime DatePosted { get; set; }
     }
 }

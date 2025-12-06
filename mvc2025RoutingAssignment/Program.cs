@@ -1,3 +1,6 @@
+using mvc2025RoutingAssignment.Models;
+using Microsoft.EntityFrameworkCore;
+
 namespace mvc2025RoutingAssignment
 {
     public class Program
@@ -8,6 +11,11 @@ namespace mvc2025RoutingAssignment
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            
+            builder.Services.AddDbContext<ApplicationDbContext>(options => options
+                    .UseLazyLoadingProxies()
+                    .UseSqlServer(builder.Configuration.GetConnectionString("BlogConnection")));
 
             var app = builder.Build();
 
