@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using mvc2025RoutingAssignment.Models;
+using mvc2025RoutingAssignment.Models.ViewModels;
 
 namespace mvc2025RoutingAssignment.Controllers
 {
@@ -21,7 +22,21 @@ namespace mvc2025RoutingAssignment.Controllers
         // GET: Tags
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Tags.ToListAsync());
+
+            var tags = await _context.Tags
+        .OrderBy(t => t.TagName)
+        .ToListAsync();
+
+            var data = tags.Select(t => new TagsViewModel
+            {
+                TagID = t.TagID,
+                TagName = t.TagName,
+                PostCount = t.PostTags.Count  // Many-to-many
+            })
+            .ToList();
+
+            return View(data);
+            
         }
 
         // GET: Tags/Details/5

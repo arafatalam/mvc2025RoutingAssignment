@@ -28,5 +28,7 @@ namespace mvc2025RoutingAssignment.Models
         [Required]
         public int BlogID { get; set; }
         public virtual Blog? Blog { get; set; }
+
+        public virtual ICollection<PostTag> PostTags { get; set; } = new List<PostTag>();
     }
 }

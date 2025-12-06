@@ -12,7 +12,7 @@ using mvc2025RoutingAssignment.Models;
 namespace mvc2025RoutingAssignment.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251206120211_addedTagsToPost")]
+    [Migration("20251206131409_addedTagsToPost")]
     partial class addedTagsToPost
     {
         /// <inheritdoc />
@@ -83,6 +83,21 @@ namespace mvc2025RoutingAssignment.Migrations
                     b.ToTable("Posts");
                 });
 
+            modelBuilder.Entity("mvc2025RoutingAssignment.Models.PostTag", b =>
+                {
+                    b.Property<int>("PostID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TagID")
+                        .HasColumnType("int");
+
+                    b.HasKey("PostID", "TagID");
+
+                    b.HasIndex("TagID");
+
+                    b.ToTable("PostTags");
+                });
+
             modelBuilder.Entity("mvc2025RoutingAssignment.Models.Tag", b =>
                 {
                     b.Property<int>("TagID")
@@ -111,9 +126,38 @@ namespace mvc2025RoutingAssignment.Migrations
                     b.Navigation("Blog");
                 });
 
+            modelBuilder.Entity("mvc2025RoutingAssignment.Models.PostTag", b =>
+                {
+                    b.HasOne("mvc2025RoutingAssignment.Models.Post", "Post")
+                        .WithMany("PostTags")
+                        .HasForeignKey("PostID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("mvc2025RoutingAssignment.Models.Tag", "Tag")
+                        .WithMany("PostTags")
+                        .HasForeignKey("TagID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+
+                    b.Navigation("Tag");
+                });
+
             modelBuilder.Entity("mvc2025RoutingAssignment.Models.Blog", b =>
                 {
                     b.Navigation("Posts");
+                });
+
+            modelBuilder.Entity("mvc2025RoutingAssignment.Models.Post", b =>
+                {
+                    b.Navigation("PostTags");
+                });
+
+            modelBuilder.Entity("mvc2025RoutingAssignment.Models.Tag", b =>
+                {
+                    b.Navigation("PostTags");
                 });
 #pragma warning restore 612, 618
         }

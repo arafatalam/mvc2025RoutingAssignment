@@ -13,5 +13,7 @@ namespace mvc2025RoutingAssignment.Models
         [Required]
         [DisplayName("Tag Name")]
         public string? TagName { get; set; }
+
+        public virtual ICollection<PostTag> PostTags { get; set; } = new List<PostTag>();
     }
 }
