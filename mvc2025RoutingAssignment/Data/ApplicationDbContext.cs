@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using mvc2025RoutingAssignment.Models;
 
-namespace mvc2025RoutingAssignment.Models
+namespace mvc2025RoutingAssignment.Data
 {
     public class ApplicationDbContext : DbContext
     {

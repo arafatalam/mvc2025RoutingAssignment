@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using mvc2025RoutingAssignment.Data;
 using mvc2025RoutingAssignment.Models;
 using mvc2025RoutingAssignment.Models.ViewModels;
 

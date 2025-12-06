@@ -1,5 +1,5 @@
-using mvc2025RoutingAssignment.Models;
 using Microsoft.EntityFrameworkCore;
+using mvc2025RoutingAssignment.Data;
 
 namespace mvc2025RoutingAssignment
 {

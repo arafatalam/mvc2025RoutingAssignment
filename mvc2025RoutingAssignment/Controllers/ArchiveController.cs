@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using mvc2025RoutingAssignment.Models;
+using mvc2025RoutingAssignment.Data;
 
 namespace mvc2025RoutingAssignment.Controllers
 {
